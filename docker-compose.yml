@@ -1,0 +1,4 @@
+dds-hashcode:
+  build: .
+  ports:
+   - "8100:443"
