@@ -33,3 +33,5 @@ define('HASHCODE_APP_LOGGING_ON', true);
 define('SYSTEM_UPLOAD_PATH_ENVIRONMENT_VARIABLE', 'DDS_SYSTEM_UPLOAD_PATH');
 
 define('CSRFP_SECRET', 'djf49u0ujnvandbep980u30r9303ri9ur949rgiu0ru');
+
+define('ACTIVE_PROFILE', 'production');

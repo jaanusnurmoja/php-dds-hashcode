@@ -17,7 +17,5 @@ RUN rm /etc/nginx/sites-enabled/default && \
 # Setup upload directory
 RUN chmod 777 /apps/example/app/upload
 
-CMD service php5-fpm stop && \
-    service php5-fpm start && \
-    service nginx restart && \
+CMD service php5-fpm stop && service php5-fpm start && service nginx restart && \
     tail -f /var/log/nginx/error.log

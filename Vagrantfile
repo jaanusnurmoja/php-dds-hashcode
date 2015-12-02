@@ -24,11 +24,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# config.vm.box = 'boxcutter/ubuntu1504'
 	config.vm.provider 'virtualbox' do |v|
 	    v.memory = 1024
-	    v.name = 'skphp'
+	    v.name = 'mihkels-dds'
 	end
 
 	# Place SK Hashcode Sample application under /apps directory
-	config.vm.synced_folder '.', '/apps', create: true, disabled: false 
+	config.vm.synced_folder '.', '/apps', create: true, disabled: false,
+    	owner: "vagrant",
+        group: "www-data",
+        mount_options: ["dmode=775,fmode=664"]
 
 	# Configuration files for Nginx and PHP Built-in Server Upstart script
 	config.vm.synced_folder './server-config', '/home/vagrant/config', create: true, disabled: false  
