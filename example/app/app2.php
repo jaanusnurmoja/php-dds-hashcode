@@ -2,38 +2,30 @@
 require_once __DIR__.'/../../vendor/autoload.php';
 
 $app = new \Silex\Application();
+
 $app->register(new \Sorien\Provider\PimpleDumpProvider());
 $app->register(new \Silex\Provider\TwigServiceProvider(), [
     'twig.path' => __DIR__.'/views/twig',
-    'twig.options' => [
-        'debug' => true
-    ]
+    'twig.options' => ['debug' => true, ],
 ]);
+$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
 $app['debug'] = true;
-$app['pimpledump.output_dir'] = __DIR__.'/../..';
 
-$app['twig'] = $app->share($app->extend('twig', function ($twig, $app) {
+$app['twig'] = $app->share($app->extend('twig', function ($twig) {
     $version = SK\Digidoc\Digidoc::version();
+    $filename = "dds-hashcode-$version.tar.gz";
+    $updated = file_exists($filename) ? date('d.m.Y', filemtime($filename)) : 'N/A';
 
     $twig->addGlobal('token', 'secure_value');
     $twig->addGlobal('version', $version);
-    $twig->addGlobal('filename', "dds-hashcode-$version.tar.gz");
-    $twig->addGlobal('updated', file_exists($filename) ? date("d.m.Y", filemtime("$filename")) : "N/A");
+    $twig->addGlobal('filename', 'dds-hashcode-'.$version.'.tar.gz');
+    $twig->addGlobal('updated', $updated);
 
     return $twig;
 }));
 
-$app->get('/', function() use ($app) {
-    return $app['twig']->render('index.twig');
-});
-
-$app->post('/new-container', function() use ($app) {
-    return 'new document created';
-});
-
-$app->post('/existing-container', function() use ($app) {
-   return 'existing container opened';
-});
+$app->mount('/', new \SK\Digidoc\Example\Controller\StartController());
+$app->mount('/container', new \SK\Digidoc\Example\Controller\ContainerController());
 
 $app->run();

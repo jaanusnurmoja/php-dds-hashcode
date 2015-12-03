@@ -3,10 +3,10 @@
     <meta http-equiv="x-ua-compatible" content="IE=Edge"/>
     <meta charset="UTF-8">
     <!-- Third party CSS libs -->
-    <link rel="stylesheet" href="assets/css/external/bootstrap.css">
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/assets/css/external/bootstrap.css' }}">
 
     <!-- Sample application CSS  -->
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/assets/css/custom.css' }} ">
 
     <!-- Third party JS libs -->
     <script src="assets/js/external/jquery.js"></script>
@@ -16,7 +16,7 @@
 
     <!-- Sample application JS -->
     <script src="assets/js/hashcode.js"></script>
-    <title>DDS Hashcode example PHP webapp</title>
+    <title>DDS Hashcode example PHP Web Application</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
     <div class="row header-row">
         <div class="col-sm-11">
             <div class="col-sm-1">
-                <a href="http://www.sk.ee/"><img src="assets/images/sklogo.GIF" style="border: 0;"></a>
+                <a href="http://www.sk.ee/"><img src="{{ app.request.baseUrl ~ '/assets/images/sklogo.GIF' }}" style="border: 0;"></a>
             </div>
             <h2 id="title-text">DDS HASHCODE EXAMPLE PHP WEB APPLICATION</h2>
         </div>

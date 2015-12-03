@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="col-sm-6">
-        <form id="oldContainerForm" class="form-inline" method="post" action="existing-container" enctype="multipart/form-data">
+        <form id="oldContainerForm" class="form-inline" method="post" action="container/existing" enctype="multipart/form-data">
             <div class="titled-container-header">
                 <h1>Scenario 1: start by sending a DigiDoc/BDOC file</h1>
             </div>
@@ -22,7 +22,7 @@
         </form>
     </div>
     <div class="col-sm-6">
-        <form id="newContainerForm" class="form-inline" action="new-container" method="post" enctype="multipart/form-data">
+        <form id="newContainerForm" class="form-inline" action="container/new" method="post" enctype="multipart/form-data">
             <div class="titled-container-header">
                 <h1>Scenario 2: start by choosing signed file format and sending a datafile</h1>
             </div>
