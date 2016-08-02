@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+$fix_vmware_tools_script = <<SCRIPT
+sed -i.bak 's/answer AUTO_KMODS_ENABLED_ANSWER no/answer AUTO_KMODS_ENABLED_ANSWER yes/g' /etc/vmware-tools/locations
+sed -i 's/answer AUTO_KMODS_ENABLED no/answer AUTO_KMODS_ENABLED yes/g' /etc/vmware-tools/locations
+SCRIPT
+
+VAGRANTFILE_API_VERSION = '2'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	config.vm.provision "shell", inline: $fix_vmware_tools_script
+
+	# Uncomment when using virtualbox provider
+	# config.vm.box = 'ubuntu/vivid64'
+	config.vm.network 'private_network', ip: '10.33.33.33'
+
+	# config.ssh.user = 'root'
+	# config.ssh.password = 'vagrant'
+	# config.ssh.insert_key = true
+
+	# Uncomment when using VMWare Fusion
+	config.vm.box = 'boxcutter/ubuntu1504'
+	config.vm.provider 'virtualbox' do |v|
+		v.name = 'skphp'
+	end
+
+	# Place SK Hashcode Sample application under /apps directory
+	config.vm.synced_folder '.', '/apps', create: true, disabled: false 
+
+	# Configuration files for Nginx and PHP Built-in Server Upstart script
+	config.vm.synced_folder './server-config', '/home/vagrant/config', create: true, disabled: false  
+
+	# Make sure Ansible is installed before start vagrant first time
+	# config.vm.provision 'ansible', run: 'always' do |ansible|
+	config.vm.provision 'ansible' do |ansible|
+		ansible.playbook = './ansible/setup.yml'
+		ansible.verbose = 'v'
+		ansible.limit = 'all'
+		ansible.sudo = true
+		ansible.host_key_checking = false
+		ansible.extra_vars = { 
+			ansible_ssh_user: 'vagrant', 
+			ansible_connection: 'ssh',
+			ansible_ssh_args: '-o ForwardAgent=yes'
+		}
+	end
+end

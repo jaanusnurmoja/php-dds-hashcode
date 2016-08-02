@@ -1,0 +1,129 @@
+---
+- hosts: all 
+  user: root
+  sudo: yes
+  vars:
+    upload_directory: /tmp/dds/upload
+    nginx_default: /etc/nginx/sites-enabled/default
+    xdebug_config: /etc/php5/fpm/conf.d/20-xdebug.ini
+
+  tasks:         
+    - name: Add NodeJS PPA repository 
+      shell: curl -sL https://deb.nodesource.com/setup | sudo bash -
+    
+    - name: update apt cache 
+      apt: update_cache=yes cache_valid_time=3600 
+
+    - name: upgrade distro
+      apt: upgrade=yes
+
+    - name: Install packages
+      apt: pkg={{ item }} state=latest
+      with_items: 
+        - build-essential
+        - nodejs        
+        - git
+        - vim 
+        - php5
+        - php5-fpm
+        - php5-xdebug
+        - nginx-full
+        - python-pip
+        - curl
+        - rsync
+        - zsh
+        - zsh-doc
+
+    - name: Add Oracle Java Repository        
+      apt_repository: repo="ppa:webupd8team/java"
+
+    - name: Accept Oracle license
+      shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+    - name: Install Oracle Java        
+      apt: pkg=oracle-java8-installer state=latest update_cache=yes cache_valid_time=3600 
+
+    - name: Install global npm Packages 
+      npm: name={{ item }} global=yes 
+      with_items: 
+        - bower
+        - nodemon
+        - jade
+        - browserify
+        - gulp
+        - yo
+
+    - name: Install Docker into servers
+      shell: wget -qO- https://get.docker.com/ | sh
+
+    # Zsh related stuff 
+    - name: Clone oh-my-zsh  
+      git: repo=git://github.com/robbyrussell/oh-my-zsh.git 
+           dest=/home/vagrant/.oh-my-zsh
+           accept_hostkey=yes
+
+    - name: Copy oh-my-zsh for root also
+      command: cp -fr /home/vagrant/.oh-my-zsh /root/.oh-my-zsh
+
+    - name: Create new zsh config from template
+      command: cp /home/vagrant/.oh-my-zsh/templates/zshrc.zsh-template /home/vagrant/.zshrc
+
+    - name: Create new zsh config for root
+      command: cp /root/.oh-my-zsh/templates/zshrc.zsh-template /root/.zshrc
+
+    - name: Set zsh as default shell
+      user: name={{ item }} shell=/usr/bin/zsh
+      with_items:
+        - vagrant
+        - root
+
+    # App setup
+    - name: Test that system upload path is set
+      lineinfile: dest=/etc/php5/fpm/pool.d/www.conf
+                  regexp='env\[DDS_SYSTEM_UPLOAD_PATH\]'
+                  line='env[DDS_SYSTEM_UPLOAD_PATH] = '{{ upload_directory }}
+
+    - name: Make sure upload directory exists
+      file: dest={{ upload_directory }} owner=www-data group=www-data state=directory recurse=yes
+
+    - name: Set max upload limit in PHP
+      replace: dest=/etc/php5/fpm/php.ini
+               regexp='^upload_max_filesize\s=\s[0-9]+M'
+               replace='upload_max_filesize = 21M'
+               backup=yes
+
+    # Setup Nginx service
+    - name: Stop Apache2 service if running
+      service: name=apache2 state=stopped
+
+    - name: Add redirect to SSL configuration to Nginx
+      file: src=/home/vagrant/config/nginx/redirect_config dest=/etc/nginx/sites-enabled/redirect state=link
+
+    - name: Check if Nginx default exists
+      stat: path={{ nginx_default }}
+      register: default_stat
+
+    - name: Remove Nginx default website
+      file: path={{ nginx_default }} state=absent
+      when: default_stat.stat.exists
+
+    - name: Install PHP app configuration into Nginx
+      file: src=/home/vagrant/config/nginx/sk_fpm_config dest={{ nginx_default }} state=link
+
+    # PHP Configuration
+    - name: Check if default XDebug configuration exists
+      stat: path={{ xdebug_config }}
+      register: xdebug_stat
+
+    - name: Remove default XDebug configuration
+      file: path={{ xdebug_config }} state=absent
+      when: xdebug_stat.stat.exists
+
+    - name: Set new XDebug configuration
+      file: src=/home/vagrant/config/xdebug/20-xdebug.ini dest={{ xdebug_config }} state=link
+
+    - name: Start PHP-FPM service if not running
+      service: name=php5-fpm state=restarted
+
+    - name: Start Nginx service if not running
+      service: name=nginx state=restarted enabled=yes
