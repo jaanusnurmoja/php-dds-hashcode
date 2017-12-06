@@ -1,0 +1,16 @@
+upstream backend {
+	server localhost:8000;
+}
+
+server {
+	listen 80;	
+	listen 443;
+
+	ssl on;
+	ssl_certificate /home/vagrant/config/nginx/certs/cert.pem;
+	ssl_certificate_key /home/vagrant/config/nginx/certs/key.pem;
+
+	location / {
+		proxy_pass http://backend;
+	}
+}

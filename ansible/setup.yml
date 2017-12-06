@@ -56,6 +56,16 @@
     - name: Install Docker into servers
       shell: wget -qO- https://get.docker.com/ | sh
 
+    # Install composer
+    - name: install composer
+      shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
+
+    - name: rename composer.phar to composer
+      shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+
+    - name: make composer executable
+      file: path=/usr/local/bin/composer mode=a+x state=file
+
     # Zsh related stuff 
     - name: Clone oh-my-zsh  
       git: repo=git://github.com/robbyrussell/oh-my-zsh.git 
@@ -96,9 +106,6 @@
     - name: Stop Apache2 service if running
       service: name=apache2 state=stopped
 
-    - name: Add redirect to SSL configuration to Nginx
-      file: src=/home/vagrant/config/nginx/redirect_config dest=/etc/nginx/sites-enabled/redirect state=link
-
     - name: Check if Nginx default exists
       stat: path={{ nginx_default }}
       register: default_stat
@@ -123,7 +130,7 @@
       file: src=/home/vagrant/config/xdebug/20-xdebug.ini dest={{ xdebug_config }} state=link
 
     - name: Start PHP-FPM service if not running
-      service: name=php5-fpm state=restarted
+      service: name=php5-fpm state=restarted enabled=yes
 
     - name: Start Nginx service if not running
       service: name=nginx state=restarted enabled=yes

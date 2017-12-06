@@ -1,0 +1,157 @@
+[
+    {
+        "name": "logger",
+        "type": "null",
+        "value": ""
+    },
+    {
+        "name": "routes",
+        "type": "class",
+        "value": "Symfony\\Component\\Routing\\RouteCollection"
+    },
+    {
+        "name": "controllers",
+        "type": "class",
+        "value": "Silex\\ControllerCollection"
+    },
+    {
+        "name": "controllers_factory",
+        "type": "class",
+        "value": "Silex\\ControllerCollection"
+    },
+    {
+        "name": "route_class",
+        "type": "string",
+        "value": "Silex\\Route"
+    },
+    {
+        "name": "route_factory",
+        "type": "class",
+        "value": "Silex\\Route"
+    },
+    {
+        "name": "exception_handler",
+        "type": "class",
+        "value": "Silex\\ExceptionHandler"
+    },
+    {
+        "name": "dispatcher_class",
+        "type": "string",
+        "value": "Symfony\\Component\\EventDispatcher\\EventDispatcher"
+    },
+    {
+        "name": "dispatcher",
+        "type": "class",
+        "value": "Symfony\\Component\\EventDispatcher\\EventDispatcher"
+    },
+    {
+        "name": "callback_resolver",
+        "type": "class",
+        "value": "Silex\\CallbackResolver"
+    },
+    {
+        "name": "resolver",
+        "type": "class",
+        "value": "Silex\\ControllerResolver"
+    },
+    {
+        "name": "kernel",
+        "type": "class",
+        "value": "Symfony\\Component\\HttpKernel\\HttpKernel"
+    },
+    {
+        "name": "request_stack",
+        "type": "class",
+        "value": "Symfony\\Component\\HttpFoundation\\RequestStack"
+    },
+    {
+        "name": "request_context",
+        "type": "class",
+        "value": "Symfony\\Component\\Routing\\RequestContext"
+    },
+    {
+        "name": "url_matcher",
+        "type": "class",
+        "value": "Silex\\RedirectableUrlMatcher"
+    },
+    {
+        "name": "request_error",
+        "type": "closure",
+        "value": ""
+    },
+    {
+        "name": "request",
+        "type": "class",
+        "value": "Symfony\\Component\\HttpFoundation\\Request"
+    },
+    {
+        "name": "request.http_port",
+        "type": "int",
+        "value": 80
+    },
+    {
+        "name": "request.https_port",
+        "type": "int",
+        "value": 443
+    },
+    {
+        "name": "debug",
+        "type": "bool",
+        "value": true
+    },
+    {
+        "name": "charset",
+        "type": "string",
+        "value": "UTF-8"
+    },
+    {
+        "name": "locale",
+        "type": "string",
+        "value": "en"
+    },
+    {
+        "name": "twig.options",
+        "type": "array",
+        "value": ""
+    },
+    {
+        "name": "twig.form.templates",
+        "type": "array",
+        "value": ""
+    },
+    {
+        "name": "twig.path",
+        "type": "string",
+        "value": "\/apps\/example\/app\/views\/twig"
+    },
+    {
+        "name": "twig.templates",
+        "type": "array",
+        "value": ""
+    },
+    {
+        "name": "twig",
+        "type": "class",
+        "value": "Twig_Environment"
+    },
+    {
+        "name": "twig.loader.filesystem",
+        "type": "class",
+        "value": "Twig_Loader_Filesystem"
+    },
+    {
+        "name": "twig.loader.array",
+        "type": "class",
+        "value": "Twig_Loader_Array"
+    },
+    {
+        "name": "twig.loader",
+        "type": "class",
+        "value": "Twig_Loader_Chain"
+    },
+    {
+        "name": "url_generator",
+        "type": "class",
+        "value": "Symfony\\Component\\Routing\\Generator\\UrlGenerator"
+    }
+]
